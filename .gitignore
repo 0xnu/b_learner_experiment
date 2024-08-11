@@ -1,0 +1,8 @@
+# OS X files
+.history
+.htaccess
+.DS_Store
+
+# Others
+401k_verification
+401k_verification_results.csv

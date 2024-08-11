@@ -70,9 +70,9 @@ $$\mathbb{E}_Q[Y(a)|X=x] = P[A=a|X=x] \times \mu^*(x,a) + P[A=1-a|X=x] \times \m
 
 Here, if we use the sharp bound $$\rho^{\pm*}$$, we can represent the upper and lower limits of $$\mathbb{E}_Q[Y(1-a)|X=x,A=a]$$ as the sharp bound:
 
-$$ Y^+(x,1) = e^*(x)\mu^*(x,1) + (1-e^*(x))\rho^{+*}(x,1) $$
+$$Y^+(x,1) = e^*(x)\mu^*(x,1) + (1-e^*(x))\rho^{+*}(x,1)$$
 
-$$ Y^-(x,0) = (1-e^*(x))\mu^*(x,0) + e^*(x)\rho^{-*}(x,0) $$
+$$Y^-(x,0) = (1-e^*(x))\mu^*(x,0) + e^*(x)\rho^{-*}(x,0)$$
 
 From the above, we can now express the upper limit of CATE's sharp bound as $$\tau^+(x) = Y^+(x,1) - Y^-(x,0)$$. Additionally, we could express the upper limit of the sharp bound as a convex combination of the conditional outcome that can be estimated from $P$ and CVaR.
 

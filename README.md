@@ -12,15 +12,15 @@ We'll employ the Neyman-Rubin outcome framework. The unobservable distribution $
 
 Given these premises, we can calculate CATE (Conditional Average Treatment Effect) from the difference in outcomes:
 
-$$ \tau(x) = \mathbb{E}_{P_{full}}[Y(1) - Y(0) | X = x] $$
+$$\tau(x) = \mathbb{E}_{P_{full}}[Y(1) - Y(0) | X = x]$$
 
 Furthermore, in the absence of confounding factors, we can derive CATE from the difference in expected values of latent outcomes:
 
-$$ \tau(x) = \mathbb{E}_P[Y | X = x, A = 1] - \mathbb{E}_P[Y | X = x, A = 0] $$
+$$\tau(x) = \mathbb{E}_P[Y | X = x, A = 1] - \mathbb{E}_P[Y | X = x, A = 0]$$
 
 However, some confounding exists that cannot be fully explained by the observed covariates $X$ alone. Therefore, due to unobserved confounding, we consider the range of deviation between $P_{full}$ and $P$ using a peripheral sensitivity model. Using the propensity scores obtained from $e(x,u) = P_{full}(A=1|X=x,U=u)$ and $e(x) = P(A=1|X=x)$, we sandwich the treatment odds ratio with a sensitivity parameter:
 
-$$ \Lambda^{-1} \leq \frac{e(x,u)}{1-e(x,u)} / \frac{e(x)}{1-e(x)} \leq \Lambda $$
+$$\Lambda^{-1} \leq \frac{e(x,u)}{1-e(x,u)} / \frac{e(x)}{1-e(x)} \leq \Lambda$$
 
 When $\Lambda = 1$, we consider there to be no influence from unobserved confounding factors. As $\Lambda$ deviates from 1, the boundaries of CATE will be estimated. B-Learner aims to characterise this boundary.
 
@@ -34,8 +34,9 @@ $$ \Lambda^{-1} \leq \frac{Q(A=1|X=x,U=u)}{Q(A=0|X=x,U=u)} / \frac{e^*(x)}{1-e^*
 
 Define the upper limit of outcome and CATE in the situation where $Q$ is sandwiched between $\Lambda$. In this format, the upper limit of CATE $\tau^+(x)$ will depend only on the observed data and sensitivity parameters:
 
-$$ Y^+(x,a) \equiv \sup_{Q \in M(\Lambda)} \mathbb{E}_Q[Y(a)|X=x] $$
-$$ \tau^+(x) \equiv \sup_{Q \in M(\Lambda)} \mathbb{E}_Q[Y(1)-Y(0)|X=x] $$
+$$Y^+(x,a) \equiv \sup_{Q \in M(\Lambda)} \mathbb{E}_Q[Y(a)|X=x]$$
+
+$$\tau^+(x) \equiv \sup_{Q \in M(\Lambda)} \mathbb{E}_Q[Y(1)-Y(0)|X=x]$$
 
 The lower limit can be obtained by converting sup to inf. The superscript + denotes the upper limit, while - indicates the lower limit.
 
@@ -55,22 +56,25 @@ We formalise the sharp bound of CATE by the observed data distribution $P$:
 
 First, we introduce a pseudo outcome corresponding to CVaR (Conditional Value at Risk) and unobserved outcome boundaries. $H$ represents CVaR, $R$ denotes the unobserved outcome bound, and $\rho^{\pm*}$ corresponds to the sharp bound:
 
-$$ H^{\pm}(z,q) = q(x,\alpha) + \frac{1}{1-\alpha}[y-q(x,\alpha)]^{\pm} $$
-$$ R^{\pm}(z,q) = \Lambda^{-1}y + (1-\Lambda^{-1})H^{\pm}(z,q) $$
-$$ \rho^{\pm*}(x,q) = \mathbb{E}[R^{\pm}(z,q)|X=x,A=a] $$
+$$H^{\pm}(z,q) = q(x,\alpha) + \frac{1}{1-\alpha}[y-q(x,\alpha)]^{\pm}$$
+
+$$R^{\pm}(z,q) = \Lambda^{-1}y + (1-\Lambda^{-1})H^{\pm}(z,q)$$
+
+$$\rho^{\pm*}(x,q) = \mathbb{E}[R^{\pm}(z,q)|X=x,A=a]$$
 
 Even if the effect of a measure is positive overall (ATE), it may be negative in terms of individual effects (ITE). CVaR formalises this negative impact as a risk.
 
 If $Q$ and $P$ match, the conditional potential outcome $Y$ is the conditional outcome of the observed data. Using $\mu^*(x,a) = \mathbb{E}[Y|X=x,A=a]$, we can express:
 
-$$ \mathbb{E}_Q[Y(a)|X=x] = P[A=a|X=x] \times \mu^*(x,a) + P[A=1-a|X=x] \times \mathbb{E}_Q[Y(1-a)|X=x,A=a] $$
+$$\mathbb{E}_Q[Y(a)|X=x] = P[A=a|X=x] \times \mu^*(x,a) + P[A=1-a|X=x] \times \mathbb{E}_Q[Y(1-a)|X=x,A=a]$$
 
-Here, if we use the sharp bound $\rho^{\pm*}$, we can represent the upper and lower limits of $\mathbb{E}_Q[Y(1-a)|X=x,A=a]$ as the sharp bound:
+Here, if we use the sharp bound $$ \rho^{\pm*}$, we can represent the upper and lower limits of $\mathbb{E}_Q[Y(1-a)|X=x,A=a] $$ as the sharp bound:
 
 $$ Y^+(x,1) = e^*(x)\mu^*(x,1) + (1-e^*(x))\rho^{+*}(x,1) $$
+
 $$ Y^-(x,0) = (1-e^*(x))\mu^*(x,0) + e^*(x)\rho^{-*}(x,0) $$
 
-From the above, we can now express the upper limit of CATE's sharp bound as $\tau^+(x) = Y^+(x,1) - Y^-(x,0)$. Additionally, we could express the upper limit of the sharp bound as a convex combination of the conditional outcome that can be estimated from $P$ and CVaR.
+From the above, we can now express the upper limit of CATE's sharp bound as $$\tau^+(x) = Y^+(x,1) - Y^-(x,0)$$. Additionally, we could express the upper limit of the sharp bound as a convex combination of the conditional outcome that can be estimated from $P$ and CVaR.
 
 However, the counterfactual $\mathbb{E}_Q[Y(1-a)|X=x,A=a]$ must be well characterised.
 
@@ -86,13 +90,15 @@ Plug-in estimation of $e$, $\mu$, $\rho$ within $\tau^+$ from observed data intr
 
 The influence function is a system of functions used to learn conditional DTE (CDTE), and has a form similar to double-robust:
 
-$$ \psi(Z,e,\alpha,\nu) = \kappa_1(X) - \kappa_0(X) - \frac{A-e(X)}{e(X)(1-e(X))}\alpha_A(X)^T\rho(Y,\nu_A(X)) $$
+$$\psi(Z,e,\alpha,\nu) = \kappa_1(X) - \kappa_0(X) - \frac{A-e(X)}{e(X)(1-e(X))}\alpha_A(X)^T\rho(Y,\nu_A(X))$$
 
 Given estimated nuisance $\hat{\eta} = (\hat{e}, \hat{q}^-(\cdot,0), \hat{q}^+(\cdot,1), \hat{\rho}^-(\cdot,0), \hat{\rho}^+(\cdot,1)) \in \Xi$, define a pseudo outcome corresponding to $Y^+(x,1)$, $Y^-(x,0)$, $\tau^+(x)$:
 
-$$ \phi_1^+(Z,\hat{\eta}) = AY + (1-A)\hat{\rho}^+(X,1) + \frac{(1-\hat{e}(X))A}{\hat{e}(X)} \cdot (R^+(Z,\hat{q}^+(X,1)) - \hat{\rho}^+(X,1)) $$
-$$ \phi_0^-(Z,\hat{\eta}) = (1-A)Y + A\hat{\rho}^-(X,0) + \frac{\hat{e}(X)(1-A)}{1-\hat{e}(X)} \cdot (R^-(Z,\hat{q}^-(X,0)) - \hat{\rho}^-(X,0)) $$
-$$ \phi_{\tau}^+(Z,\hat{\eta}) = \phi_1^+(Z,\hat{\eta}) - \phi_0^-(Z,\hat{\eta}) $$
+$$\phi_1^+(Z,\hat{\eta}) = AY + (1-A)\hat{\rho}^+(X,1) + \frac{(1-\hat{e}(X))A}{\hat{e}(X)} \cdot (R^+(Z,\hat{q}^+(X,1)) - \hat{\rho}^+(X,1))$$
+
+$$\phi_0^-(Z,\hat{\eta}) = (1-A)Y + A\hat{\rho}^-(X,0) + \frac{\hat{e}(X)(1-A)}{1-\hat{e}(X)} \cdot (R^-(Z,\hat{q}^-(X,0)) - \hat{\rho}^-(X,0))$$
+
+$$\phi_{\tau}^+(Z,\hat{\eta}) = \phi_1^+(Z,\hat{\eta}) - \phi_0^-(Z,\hat{\eta})$$
 
 The third term on the right side of $\phi_1^+(Z,\hat{\eta})$ serves to orthogonalise the prediction error of $\hat{\rho}^+$. This allowed us to formulate pseudo-outcome boundaries.
 
@@ -131,9 +137,11 @@ Let us verify whether the lower and upper bounds can be estimated using simulati
 
 The simulation data generation process follows this format ($\sigma_p$ is a sigmoid function):
 
-$$ X \sim \text{Unif}([-2,2]^5) $$
-$$ A|X \sim \text{Bern}(\sigma(0.75X_0 + 0.5)) $$
-$$ Y \sim \mathcal{N}((2A-1)(X_0 + 1) - 2\sin((4A-2)X_0), 1) $$
+$$X \sim \text{Unif}([-2,2]^5)$$
+
+$$A|X \sim \text{Bern}(\sigma(0.75X_0 + 0.5))$$
+
+$$Y \sim \mathcal{N}((2A-1)(X_0 + 1) - 2\sin((4A-2)X_0), 1)$$
 
 ```sh
 make help

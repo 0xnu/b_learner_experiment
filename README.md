@@ -18,7 +18,7 @@ Furthermore, in the absence of confounding factors, we can derive CATE from the 
 
 $$\tau(x) = \mathbb{E}_P[Y | X = x, A = 1] - \mathbb{E}_P[Y | X = x, A = 0]$$
 
-However, some confounding exists that cannot be fully explained by the observed covariates $X$ alone. Therefore, due to unobserved confounding, we consider the range of deviation between $P_{full}$ and $P$ using a peripheral sensitivity model. Using the propensity scores obtained from $e(x,u) = P_{full}(A=1|X=x,U=u)$ and $e(x) = P(A=1|X=x)$, we sandwich the treatment odds ratio with a sensitivity parameter:
+However, some confounding exists that cannot be fully explained by the observed covariates $$X$$ alone. Therefore, due to unobserved confounding, we consider the range of deviation between $P_{full}$ and $P$ using a peripheral sensitivity model. Using the propensity scores obtained from $e(x,u) = P_{full}(A=1|X=x,U=u)$ and $e(x) = P(A=1|X=x)$, we sandwich the treatment odds ratio with a sensitivity parameter:
 
 $$\Lambda^{-1} \leq \frac{e(x,u)}{1-e(x,u)} / \frac{e(x)}{1-e(x)} \leq \Lambda$$
 

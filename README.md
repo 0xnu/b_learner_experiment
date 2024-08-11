@@ -68,7 +68,7 @@ If $Q$ and $P$ match, the conditional potential outcome $Y$ is the conditional o
 
 $$\mathbb{E}_Q[Y(a)|X=x] = P[A=a|X=x] \times \mu^*(x,a) + P[A=1-a|X=x] \times \mathbb{E}_Q[Y(1-a)|X=x,A=a]$$
 
-Here, if we use the sharp bound $$ \rho^{\pm*}$, we can represent the upper and lower limits of $\mathbb{E}_Q[Y(1-a)|X=x,A=a] $$ as the sharp bound:
+Here, if we use the sharp bound $$\rho^{\pm*}$$, we can represent the upper and lower limits of $$\mathbb{E}_Q[Y(1-a)|X=x,A=a]$$ as the sharp bound:
 
 $$ Y^+(x,1) = e^*(x)\mu^*(x,1) + (1-e^*(x))\rho^{+*}(x,1) $$
 
@@ -76,9 +76,9 @@ $$ Y^-(x,0) = (1-e^*(x))\mu^*(x,0) + e^*(x)\rho^{-*}(x,0) $$
 
 From the above, we can now express the upper limit of CATE's sharp bound as $$\tau^+(x) = Y^+(x,1) - Y^-(x,0)$$. Additionally, we could express the upper limit of the sharp bound as a convex combination of the conditional outcome that can be estimated from $P$ and CVaR.
 
-However, the counterfactual $\mathbb{E}_Q[Y(1-a)|X=x,A=a]$ must be well characterised.
+However, the counterfactual $$\mathbb{E}_Q[Y(1-a)|X=x,A=a]$$ must be well characterised.
 
-We've obtained a valid/sharp bound for $\tau^+$. However, since the sensitivity parameter is a hyperparameter, the true $q$ cannot be confirmed, so it can be said that it's still insufficient for quasi-oracle estimation.
+We've obtained a valid/sharp bound for $$\tau^+$$. However, since the sensitivity parameter is a hyperparameter, the true $$q$$ cannot be confirmed, so it can be said that it's still insufficient for quasi-oracle estimation.
 
 ### B-Learner: Pseudo-Outcome Regression for Doubly-Robust Sharp CATE Bounds
 
@@ -86,13 +86,13 @@ Up to this point, we've formalised CATE's sharp bound. From here, we'll propose 
 
 #### Pseudo-outcome Regression for Quasi-oracle Estimation
 
-Plug-in estimation of $e$, $\mu$, $\rho$ within $\tau^+$ from observed data introduces excessive bias. Therefore, we derive a pseudo outcome with a valid bound based on the influence function and use it as a covariate. By regressing on $X$, we estimate a sharp bound CATE with more desirable characteristics than the previous result.
+Plug-in estimation of $$e$$, $$\mu$$, $$\rho$$ within $$\tau^+$$ from observed data introduces excessive bias. Therefore, we derive a pseudo outcome with a valid bound based on the influence function and use it as a covariate. By regressing on $X$, we estimate a sharp bound CATE with more desirable characteristics than the previous result.
 
 The influence function is a system of functions used to learn conditional DTE (CDTE), and has a form similar to double-robust:
 
 $$\psi(Z,e,\alpha,\nu) = \kappa_1(X) - \kappa_0(X) - \frac{A-e(X)}{e(X)(1-e(X))}\alpha_A(X)^T\rho(Y,\nu_A(X))$$
 
-Given estimated nuisance $\hat{\eta} = (\hat{e}, \hat{q}^-(\cdot,0), \hat{q}^+(\cdot,1), \hat{\rho}^-(\cdot,0), \hat{\rho}^+(\cdot,1)) \in \Xi$, define a pseudo outcome corresponding to $Y^+(x,1)$, $Y^-(x,0)$, $\tau^+(x)$:
+Given estimated nuisance $$\hat{\eta} = (\hat{e}, \hat{q}^-(\cdot,0), \hat{q}^+(\cdot,1), \hat{\rho}^-(\cdot,0), \hat{\rho}^+(\cdot,1)) \in \Xi$$, define a pseudo outcome corresponding to $$Y^+(x,1)$$, $$Y^-(x,0)$$, $$\tau^+(x)$$:
 
 $$\phi_1^+(Z,\hat{\eta}) = AY + (1-A)\hat{\rho}^+(X,1) + \frac{(1-\hat{e}(X))A}{\hat{e}(X)} \cdot (R^+(Z,\hat{q}^+(X,1)) - \hat{\rho}^+(X,1))$$
 
@@ -100,9 +100,9 @@ $$\phi_0^-(Z,\hat{\eta}) = (1-A)Y + A\hat{\rho}^-(X,0) + \frac{\hat{e}(X)(1-A)}{
 
 $$\phi_{\tau}^+(Z,\hat{\eta}) = \phi_1^+(Z,\hat{\eta}) - \phi_0^-(Z,\hat{\eta})$$
 
-The third term on the right side of $\phi_1^+(Z,\hat{\eta})$ serves to orthogonalise the prediction error of $\hat{\rho}^+$. This allowed us to formulate pseudo-outcome boundaries.
+The third term on the right side of $$\phi_1^+(Z,\hat{\eta})$$ serves to orthogonalise the prediction error of $$\hat{\rho}^+$$. This allowed us to formulate pseudo-outcome boundaries.
 
-Pseudo outcome can be considered a statistical estimator of observed data distribution $P$. Particularly, if $A=1$ and there is no confounding, $\phi_{\tau}^+(Z,\hat{\eta})$ has a similar shape to double-robust's pseudo outcome.
+Pseudo outcome can be considered a statistical estimator of observed data distribution $P$. Particularly, if $A=1$ and there is no confounding, $$\phi_{\tau}^+(Z,\hat{\eta})$$ has a similar shape to double-robust's pseudo outcome.
 
 #### Algorithm
 
@@ -111,13 +111,13 @@ B-Learner is a two-step estimation method:
 1. In the first stage, we estimate the nuisances (outcome, propensity score, CVaR) with k-fold cross-fitting and construct a pseudo-outcome estimator. 
 2. In the second step, we use the estimated pseudo-outcome as a covariate. Regress on $X$ and obtain the CATE bound.
 
-The propensity score $e^*(x)$ or quantile $q^{\pm*}$ is derived using standard classifiers or regression models.
+The propensity score $$e^*(x)$$ or quantile $$q^{\pm*}$$ is derived using standard classifiers or regression models.
 
-Also, for the outcome $\rho^{\pm*}(x,a) = \Lambda^{-1}\mu^*(x,a) + (1-\Lambda)^{-1}CVaR^{\pm}(x,a)$, it's possible to derive this by separately predicting $\mu^*(x,a)$ and $CVaR^{\pm}(x,a)$.
+Also, for the outcome $$\rho^{\pm*}(x,a) = \Lambda^{-1}\mu^*(x,a) + (1-\Lambda)^{-1}CVaR^{\pm}(x,a)$$, it's possible to derive this by separately predicting $$\mu^*(x,a)$$ and $$CVaR^{\pm}(x,a)$$.
 
-In the first stage alone, the estimation error of the sharp bound bias will be $|e^* - \hat{e}||\rho^* - \hat{\rho}| + (q^* - \hat{q})^2$. It seems that by performing up to the second stage, a robust estimation can be made.
+In the first stage alone, the estimation error of the sharp bound bias will be $$|e^* - \hat{e}||\rho^* - \hat{\rho}| + (q^* - \hat{q})^2$$. It seems that by performing up to the second stage, a robust estimation can be made.
 
-Also, if the quantile estimates are inconsistent, $(q^+ - \hat{q}^+)^2, (q^- - \hat{q}^-)^2$ cannot be cancelled. In that case, it seems that smoothing estimation can be used.
+Also, if the quantile estimates are inconsistent, $$(q^+ - \hat{q}^+)^2, (q^- - \hat{q}^-)^2$$ cannot be cancelled. In that case, it seems that smoothing estimation can be used.
 
 ### Experiments
 
@@ -125,17 +125,17 @@ In the paper, three types of verification were performed: simulation data, IHDP,
 
 #### Impact of 401(k) Eligibility on Wealth Distribution
 
-401(k) Eligibility is a dataset about 401(k) eligibility and its impact on financial assets. This dataset is known to be unconfounded, but assuming there is confounding, we verify B-Learner by changing $\Lambda$.
+401(k) Eligibility is a dataset about 401(k) eligibility and its impact on financial assets. This dataset is known to be unconfounded, but assuming there is confounding, we verify B-Learner by changing $$\Lambda$$.
 
-Left figure: For $\log \Lambda = 0.2$, the true effect is contained between the lower and upper bounds.
+Left figure: For $$\log \Lambda = 0.2$$, the true effect is contained between the lower and upper bounds.
 
-Right figure: When changing $\log \Lambda$, it shows the percentage where $\hat{\tau}(x) < 0$. When $\Lambda$ is small, many are positive, but if it increases to $\log \Lambda = 0.6$, about half of it becomes negative. In other words, if there were hidden confounding factors that exerted this level of influence, it's possible that about half of the negative influence would have been due to unobserved factors. With B-Learner, we were able to quantify these risks.
+Right figure: When changing $$\log \Lambda$$, it shows the percentage where $$\hat{\tau}(x) < 0$$. When $$\Lambda$$ is small, many are positive, but if it increases to $$\log \Lambda = 0.6$$, about half of it becomes negative. In other words, if there were hidden confounding factors that exerted this level of influence, it's possible that about half of the negative influence would have been due to unobserved factors. With B-Learner, we were able to quantify these risks.
 
 ### 401k Verification
 
 Let us verify whether the lower and upper bounds can be estimated using simulation data.
 
-The simulation data generation process follows this format ($\sigma_p$ is a sigmoid function):
+The simulation data generation process follows this format ($$\sigma_p$$ is a sigmoid function):
 
 $$X \sim \text{Unif}([-2,2]^5)$$
 

@@ -2,13 +2,24 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <string.h>
 
-#define FEATURES 5
+#define FEATURES 11
 #define SAMPLES 10000 // Assuming this is the number of samples in the 401K dataset
 
 // Structure to hold each sample's data
 typedef struct {
-    double features[FEATURES];
+    double age;
+    double inc;
+    double educ;
+    double fsize;
+    int marr;
+    int two_earn;
+    int db;
+    int pira;
+    int hown;
+    int e401;
+    double net_tfa;
     int treatment;
     double outcome;
 } Sample;
@@ -33,50 +44,53 @@ double sigmoid(double x) {
 // Generate simulation data according to the specified process
 void generate_data(Sample* data, int n) {
     for (int i = 0; i < n; i++) {
-        // Generate X ~ Unif([-2,2]^5)
-        for (int j = 0; j < FEATURES; j++) {
-            data[i].features[j] = -2 + 4 * uniform_rand();
-        }
+        // Generate continuous features
+        data[i].age = 18 + 47 * uniform_rand(); // Age between 18 and 65
+        data[i].inc = 10000 + 190000 * uniform_rand(); // Income between 10k and 200k
+        data[i].educ = 8 + 16 * uniform_rand(); // Education between 8 and 24 years
+        data[i].fsize = 1 + 9 * uniform_rand(); // Family size between 1 and 10
+        data[i].net_tfa = -100000 + 1100000 * uniform_rand(); // Net financial assets between -100k and 1M
+
+        // Generate binary features
+        data[i].marr = (uniform_rand() < 0.5) ? 0 : 1;
+        data[i].two_earn = (uniform_rand() < 0.5) ? 0 : 1;
+        data[i].db = (uniform_rand() < 0.3) ? 0 : 1;
+        data[i].pira = (uniform_rand() < 0.4) ? 0 : 1;
+        data[i].hown = (uniform_rand() < 0.6) ? 0 : 1;
         
-        // Generate A|X ~ Bern(sigma(0.75X_0 + 0.5))
-        double p = sigmoid(0.75 * data[i].features[0] + 0.5);
-        data[i].treatment = (uniform_rand() < p) ? 1 : 0;
+        // Generate A|X ~ Bern(sigma(0.01*age + 0.00001*inc + 0.1*educ - 0.5))
+        double p = sigmoid(0.01 * data[i].age + 0.00001 * data[i].inc + 0.1 * data[i].educ - 0.5);
+        data[i].e401 = (uniform_rand() < p) ? 1 : 0;
         
-        // Generate Y ~ N((2A-1)(X_0 + 1) - 2sin((4A-2)X_0), 1)
-        double mean = (2 * data[i].treatment - 1) * (data[i].features[0] + 1) - 
-                      2 * sin((4 * data[i].treatment - 2) * data[i].features[0]);
+        // Generate Y ~ N((2A-1)(age/10 + inc/50000), 1)
+        double mean = (2 * data[i].e401 - 1) * (data[i].age/10 + data[i].inc/50000);
         data[i].outcome = mean + normal_rand();
     }
 }
 
 // Calculate the true Conditional Average Treatment Effect (CATE)
-double true_cate(double x0) {
-    return 2 * (x0 + 1) - 2 * (sin(2 * x0) - sin(-2 * x0));
+double true_cate(double age, double inc) {
+    return 2 * (age/10 + inc/50000);
 }
 
 // Estimate lower and upper bounds for CATE using B-Learner method
 void estimate_bounds(Sample* data, int n, double log_gamma, double* lower_bound, double* upper_bound) {
     double gamma = exp(log_gamma);
     double lambda = gamma + 1;  // Lambda = gamma + 1
-    double tau = gamma / lambda;
 
     for (int i = 0; i < n; i++) {
         // Estimate propensity score e(x)
-        double e = sigmoid(0.75 * data[i].features[0] + 0.5);
+        double e = sigmoid(0.01 * data[i].age + 0.00001 * data[i].inc + 0.1 * data[i].educ - 0.5);
         
         // Estimate outcome mu(x,a)
-        double mu = (2 * data[i].treatment - 1) * (data[i].features[0] + 1) - 
-                    2 * sin((4 * data[i].treatment - 2) * data[i].features[0]);
+        double mu = (2 * data[i].e401 - 1) * (data[i].age/10 + data[i].inc/50000);
         
         // Calculate R(z,q) (simplified version without quantile estimation)
         double R = lambda * (data[i].outcome - mu) / 2;
         
-        // Calculate rho(x,a) (simplified version)
-        double rho = mu + R / lambda;
-        
         // Calculate pseudo-outcome
         double pseudo_outcome = data[i].outcome - mu + 
-                                (data[i].treatment - e) / (e * (1 - e)) * 
+                                (data[i].e401 - e) / (e * (1 - e)) * 
                                 (data[i].outcome - mu);
         
         // Estimate bounds
@@ -106,7 +120,7 @@ int main() {
 
     // Calculate true CATEs
     for (int i = 0; i < SAMPLES; i++) {
-        true_cates[i] = true_cate(data[i].features[0]);
+        true_cates[i] = true_cate(data[i].age, data[i].inc);
     }
 
     // Print CSV header

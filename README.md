@@ -30,7 +30,7 @@ The sensitivity parameter $\Lambda$ is a hyperparameter determining the degree o
 
 Let $Q$ be a set of data containing unobserved confounds $(X, A, Y(1), Y(0), U)$, and $e^*$ be the propensity score obtained from the observed data. We can then rewrite the previous definition using $Q$:
 
-$\Lambda^{-1} \leq \frac{Q(A=1|X=x,U=u)}{Q(A=0|X=x,U=u)} / \frac{e^*(x)}{1-e^*(x)} \leq \Lambda$
+$$\Lambda^{-1} \leq \frac{Q(A=1|X=x,U=u)}{Q(A=0|X=x,U=u)} / \frac{e^*(x)}{1-e^*(x)} \leq \Lambda$$
 
 Define the upper limit of outcome and CATE in the situation where $Q$ is sandwiched between $\Lambda$. In this format, the upper limit of CATE $\tau^+(x)$ will depend only on the observed data and sensitivity parameters:
 

@@ -30,7 +30,7 @@ The sensitivity parameter $\Lambda$ is a hyperparameter determining the degree o
 
 Let $Q$ be a set of data containing unobserved confounds $(X, A, Y(1), Y(0), U)$, and $e^*$ be the propensity score obtained from the observed data. We can then rewrite the previous definition using $Q$:
 
-$$\Lambda^{-1} \leq \frac{Q(A=1|X=x,U=u)}{Q(A=0|X=x,U=u)} / \frac{e^*(x)}{1-e^*(x)} \leq \Lambda$$
+$$\Lambda^{-1 } \leq \frac{Q(A=1|X=x,U=u)}{Q(A=0|X=x,U=u)} / \frac{e^*(x)}{1-e^*(x)} \leq \Lambda$$
 
 Define the upper limit of outcome and CATE in the situation where $Q$ is sandwiched between $\Lambda$. In this format, the upper limit of CATE $\tau^+(x)$ will depend only on the observed data and sensitivity parameters:
 
@@ -111,9 +111,9 @@ B-Learner is a two-step estimation method:
 1. In the first stage, we estimate the nuisances (outcome, propensity score, CVaR) with k-fold cross-fitting and construct a pseudo-outcome estimator.
 2. In the second step, we use the estimated pseudo-outcome as a covariate. Regress on $X$ and obtain the CATE bound.
 
-The propensity score $$e^*(x)$$ or quantile $$q^{\pm*}$$ is derived using standard classifiers or regression models.
+The propensity score $e^*(x)$ or quantile $q^{\pm*}$ is derived using standard classifiers or regression models.
 
-Also, for the outcome $$\rho^{\pm*}(x,a) = \Lambda^{-1}\mu^*(x,a) + (1-\Lambda)^{-1}CVaR^{\pm}(x,a)$$, it's possible to derive this by separately predicting $$\mu^*(x,a)$$ and $CVaR^{\pm}(x,a)$.
+Also, for the outcome $\rho^{\pm*}(x,a) = \Lambda^{-1}\mu^*(x,a) + (1-\Lambda)^{-1}CVaR^{\pm}(x,a)$, it's possible to derive this by separately predicting $\mu^*(x,a)$ and $CVaR^{\pm}(x,a)$.
 
 In the first stage alone, the estimation error of the sharp bound bias will be $|e^* - \hat{e}||\rho^* - \hat{\rho}| + (q^* - \hat{q})^2$. It seems that by performing up to the second stage, a robust estimation can be made.
 
